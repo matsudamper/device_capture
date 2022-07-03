@@ -25,6 +25,8 @@ jobs:
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         arguments: build
+      env:
+        VERSION: ${{ github.event.inputs.VERSION }}
     - name: release
       run: |
         gh release upload $VERSION build/libs/device_capture-jvm-${VERSION}.jar
