@@ -7,7 +7,9 @@ plugins {
 }
 
 group = "net.matsudamper"
-version = "local"
+version = rootProject.properties["net.matsudamper.device_capture.version"]
+    .let { it as? String }
+    .takeUnless { it.isNullOrBlank() } ?: "local"
 
 repositories {
     mavenLocal()

@@ -8,9 +8,6 @@ on:
         required: true
         type: string
 
-permissions:
-  contents: read
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,15 +18,16 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-      with:
-        arguments: build
+      run: |
+        ./gradlew build -P net.matsudamper.device_capture.version=${VERSION}
       env:
         VERSION: ${{ github.event.inputs.VERSION }}
     - name: release
       run: |
-        gh release upload $VERSION build/libs/device_capture-jvm-${VERSION}.jar
+        gh release create $VERSION ./build/libs/device_capture-jvm-${VERSION}.jar
       env:
         GITHUB_TOKEN: ${{ github.token }}
         VERSION: ${{ github.event.inputs.VERSION }}
