@@ -30,3 +30,4 @@ jobs:
         gh release upload $VERSION build/libs/device_capture-jvm-${VERSION}.jar
       env:
         GITHUB_TOKEN: ${{ github.token }}
+        VERSION: ${{ github.event.inputs.VERSION }}
