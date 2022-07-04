@@ -27,7 +27,7 @@ jobs:
         VERSION: ${{ github.event.inputs.VERSION }}
     - name: release
       run: |
-        gh release create $VERSION ./build/compose/binaries/main/msi/DeviceCapture-${VERSION}.msi
+        gh release create --generate-notes $VERSION ./build/compose/binaries/main/msi/DeviceCapture-${VERSION}.msi
       env:
         GITHUB_TOKEN: ${{ github.token }}
         VERSION: ${{ github.event.inputs.VERSION }}
