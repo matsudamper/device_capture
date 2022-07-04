@@ -39,20 +39,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = "17"
 }
 
-tasks.withType(Jar::class.java) {
-    manifest {
-        attributes["Main-Class"] = mainClassName
-    }
-    from(
-        configurations.runtimeClasspath.map { config ->
-            config.toList().orEmpty().map {
-                if (it.isDirectory) it else zipTree(it)
-            }
-        }
-    )
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-}
-
 compose.desktop {
     application {
         mainClass = mainClassName
