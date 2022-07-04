@@ -5,6 +5,7 @@ import org.freedesktop.gstreamer.*
 import java.awt.image.BufferedImage
 
 class GstVideoDeviceStreamingManager(private val devicePath: String) : AutoCloseable {
+    var state: State = State.Initializing
     private val pipeline: Pipeline = Pipeline()
 
     private val source = createSource(devicePath)
@@ -15,16 +16,24 @@ class GstVideoDeviceStreamingManager(private val devicePath: String) : AutoClose
     private val elements = listOf(source, convert, scale, sink)
 
     init {
-        println("DevicePath: $devicePath")
+        run init@{
+            println("DevicePath: $devicePath")
 
-        runCatching {
-            pipeline.also {
-                it.addMany(*elements.toTypedArray())
-                Element.linkMany(*elements.toTypedArray())
+            if (source == null) {
+                state = State.Failed
+                return@init
             }
-            pipeline.play()
-        }.onFailure {
-            it.printStackTrace()
+
+            runCatching {
+                pipeline.also {
+                    it.addMany(*elements.toTypedArray())
+                    Element.linkMany(*elements.toTypedArray())
+                }
+                pipeline.play()
+            }.onFailure {
+                it.printStackTrace()
+            }
+            state = State.Initialized
         }
     }
 
@@ -33,16 +42,24 @@ class GstVideoDeviceStreamingManager(private val devicePath: String) : AutoClose
     }
 
     override fun close() {
-        elements.forEach { it.close() }
+        elements.forEach { it?.close() }
         pipeline.stop()
         pipeline.close()
         pipeline.dispose()
     }
 
-    private fun createSource(devicePath: String): Bin {
-        return Gst.parseBinFromDescription(
-            """mfvideosrc device-path=${devicePath}""",
-            true
-        )
+    private fun createSource(devicePath: String): Bin? {
+        return runCatching {
+            Gst.parseBinFromDescription(
+                """mfvideosrc device-path=${devicePath}""",
+                true
+            )
+        }.getOrNull()
+    }
+
+    enum class State {
+        Initializing,
+        Initialized,
+        Failed
     }
 }
