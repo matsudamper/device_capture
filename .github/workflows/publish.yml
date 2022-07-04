@@ -22,12 +22,12 @@ jobs:
       uses: gradle/gradle-build-action@v2
     - name: Build with Gradle
       run: |
-        ./gradlew build -P net.matsudamper.device_capture.version=${VERSION}
+        ./gradlew build -P net.matsudamper.device_capture.version=${Env:VERSION}
       env:
         VERSION: ${{ github.event.inputs.VERSION }}
     - name: release
       run: |
-        gh release create --generate-notes ${VERSION} ./build/compose/binaries/main/msi/DeviceCapture-${VERSION}.msi
+        gh release create --generate-notes ${Env:VERSION} ./build/compose/binaries/main/msi/DeviceCapture-${Env:VERSION}.msi
       env:
         GITHUB_TOKEN: ${{ github.token }}
         VERSION: ${{ github.event.inputs.VERSION }}
