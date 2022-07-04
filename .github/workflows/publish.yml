@@ -22,7 +22,7 @@ jobs:
       uses: gradle/gradle-build-action@v2
     - name: Build with Gradle
       run: |
-        ./gradlew build -P net.matsudamper.device_capture.version=${Env:VERSION}
+        ./gradlew package -P net.matsudamper.device_capture.version=${Env:VERSION}
       env:
         VERSION: ${{ github.event.inputs.VERSION }}
     - name: release
