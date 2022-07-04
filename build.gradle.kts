@@ -46,7 +46,7 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             vendor = "matsudamper"
             packageName = "DeviceCapture"
-            packageVersion = "1.0.0"
+            packageVersion = rootProject.version as String
         }
     }
 }
