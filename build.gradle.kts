@@ -58,7 +58,8 @@ compose.desktop {
         mainClass = mainClassName
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "device_capture"
+            vendor = "matsudamper"
+            packageName = "Device Capture"
             packageVersion = "1.0.0"
         }
     }
